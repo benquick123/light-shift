@@ -1,0 +1,349 @@
+<html>
+	<head>
+		<title>LightShift</title>
+		<link href='http://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+		<style>
+			body { margin: 0; }
+			canvas { width: 100%; height: 100% }
+			#crosshair {
+				position: absolute;
+			    top: 50%;
+			    left: 50%;
+			    margin-top: -12.5px;
+			    margin-left: -12.5px;
+			}
+			#menu {
+				position: fixed;
+				top: 50%;
+				left: 50%;
+				width: 26vw;
+				-webkit-transform: translate(-50%, -50%);
+				transform: translate(-50%, -50%);
+			}
+			#game{
+				font-family: "Lato";
+				font-weight: bold;
+				font-size: 6vw;
+				-webkit-text-stroke: 1px 0xaaaaaa;
+			}
+			#options, #endGame {
+				font-family: "Lato";
+				color: rgb(128, 128, 128);
+				-webkit-text-stroke: 1px 0xaaaaaa;
+			}
+			#endGame {
+				//text-align: justify;
+			}
+			#leftcolumn {
+				font-family: 'Lato';
+				color: rgb(128, 128, 128);
+				position: fixed;
+				width: 45vw;
+				height: 35vw;
+				top: 50%;
+				left: 25%;
+				-webkit-transform: translate(-50%, -50%);
+				transform: translate(-50%, -50%);
+			}
+			#rightcolumn {
+				font-family: 'Lato';
+				color: rgb(128, 128, 128);
+				position: fixed;
+				width: 45vw;
+				height: 35vw;
+				top: 52.5%;
+				left: 75%;
+				-webkit-transform: translate(-50%, -50%);
+				transform: translate(-50%, -50%);
+			}
+			#backButton {
+				color: rgb(128, 128, 128);
+				position: fixed;
+				top: 93.5%;
+				left: 50%;
+				width: 26vw;
+				-webkit-transform: translate(-50%, -50%);
+				transform: translate(-50%, -50%);
+			}
+			p {
+				background-color: rgba(0,0,0,0.6);
+				font-size: 2.5vw;
+				text-align: center;
+				line-height: 120%;
+				cursor:pointer;
+				margin-bottom: 0.5em;
+				margin-top: 0.5em;
+			}
+			
+			#bar {
+				font-family: 'Lato';
+				font-size: 1.5vw;
+				position: fixed;
+				top: 95%;
+				left: 5.5%;
+				-webkit-transform: translate(-50%, -50%);
+				transform: translate(-50%, -50%);
+			}
+			#progressBar {
+				position: fixed;
+				top: 95%;
+				left: 9%;
+				background-color: rgba(0,0,0,0.6);
+				height: 2vw;
+				-webkit-transform: translate(0%, -50%);
+				transform: translate(0%, -50%);
+			}
+			#fineTuning {
+				font-family: 'Lato';
+				font-size: 1.5vw;
+				text-align: right;
+				position: fixed;
+				top: 95%;
+				right: 2.5%;
+				width: 26vw;
+				-webkit-transform: translate(0%, -50%);
+				transform: translate(0%, -50%);
+			}
+			#leftEnd {
+				position: fixed;
+				width: 13vw;
+				height: 6vw;
+				font-size: 2.5vw;
+				background-color: rgba(0,0,0,0.6);
+			}
+			#rightEnd {
+				position: fixed;
+				left: 50%;
+				width: 13vw;
+				height: 6vw;
+				font-size: 2.5vw;
+				background-color: rgba(0,0,0,0.6);
+				text-align: right;
+			}
+			#end {
+				position:fixed
+				left: 50%;
+				width:26vw;
+				text-align: center;
+				cursor:pointer;
+				font-size: 2.5vw;
+				background-color: rgba(0,0,0,0.6);
+			}
+		</style>
+	</head>
+	<body>
+		<div id="crosshair">
+			<img src="textures/crosshair.png" width=25px  height=25px></img>
+		</div>
+		<div id="menu">
+			<div id="game"> 
+				LightShift
+			</div>
+			<div id="options" onload=mainMenu()></div>
+			<div id="endGame"></div>
+		</div>
+		<div id="leftcolumn">
+			<p style="height:35vw; line-height:110%;"><b>Controls: </b><br>
+			W/A/S/D - <span style="font-size: 2vw;"> Move </span><br>
+			Mouse - <span style="font-size: 2vw;"> Look </span><br>
+			Mouse Left Click - <span style="font-size: 2vw;"> Lock/Release Object </span><br>
+			Mouse wheel - <span style="font-size: 2vw;"> Pull/push object </span><br>
+			Y - <span style="font-size: 2vw;"> Rotate X axis </span><br>
+			X - <span style="font-size: 2vw;"> Rotate Y axis </span><br>
+			C - <span style="font-size: 2vw;"> Rotate Z axis </span><br>
+			Shift + (Y/X/C) - <span style="font-size: 2vw;"> Rotate in other direction </span><br>
+			F - <span style="font-size: 2vw;"> Manipulation fine tuning </span><br>
+			Space - <span style="font-size: 2vw;"> Light Switch </span><br>
+			Backspace - <span style="font-size: 2vw;"> End game </span></p>
+		</div>
+		<div id="rightcolumn">
+			<p style="height:35vw; display: table-cell; vertical-align: middle;"> <span>
+			<b>How to play: </b><br>
+			<span style="font-size: 2vw; line-height: 110%;">
+			Well, the goal is to assemble all the pieces floating around the room, so they form a pre-defined formation. But how do you do that, you may ask.
+			At any time, you can hit the light switch, which changes the room setting. When the light is on, you can see, move and rotate the pieces.  
+			When the light is off, you can see the target formation, but you can't manipulate or see the pieces. 
+			The game ends when the timer (which depends of the difficulty you choose) runs out, or if you are 
+			confident that you assebmled the pieces properly and decide to end the game earlier.<br>
+			</span></span></p>
+		</div>
+		<div id="backButton">
+			<p style="font-family: 'Lato'; -webkit-text-stroke: 1px 0xaaaaaa;" onClick="mainMenu()">Back</p>
+		</div>
+		<div id="bar">
+			Time left:
+		</div>
+		<div id="progressBar"> </div>
+		<div id="fineTuning"> Fine Tuning: OFF </div>
+		<script src="js/three.min.js"></script>
+		<script src="js/OBJLoader.js"></script>
+		
+		<script src="js/objects.js"></script>
+		
+		<script src="js/enviroment.js"></script>
+		<script src="js/distances.js"></script>
+		
+		<script src="js/event_handler.js"></script>
+		<script src="js/animate.js"></script>
+		<script src="js/game.js"></script>
+		
+		<script>
+			function modeSelect() {
+				document.getElementById("options").innerHTML = "" +
+					"<p onClick=easyMode()>Easy</p>" +
+					"<p onClick=mediumMode()>Medium</p>" + 
+					"<p onClick=hardMode()>Hard</p>" + 
+					"<p onClick=mainMenu()>Back</p>";
+			}
+			
+			function controls() {
+				document.getElementById("leftcolumn").style.display = "block";
+				document.getElementById("rightcolumn").style.display = "block";
+				document.getElementById("options").innerHTML = "";
+				document.getElementById("menu").setAttribute("style", "top:8%;");
+				document.getElementById("backButton").style.display = "block";
+			}
+			
+			function mainMenu() {
+				document.getElementById("menu").removeAttribute("style");
+				document.getElementById("options").innerHTML = "" +
+				"<p align='center' onClick=modeSelect()>New game</p>" +
+				"<p align='center' onClick=controls()>How to</p>";
+				document.getElementById("leftcolumn").style.display = "none";
+				document.getElementById("rightcolumn").style.display = "none";
+				document.getElementById("backButton").style.display = "none";
+				document.getElementById("bar").style.display = "none";
+				document.getElementById("progressBar").style.display = "none";
+				document.getElementById("fineTuning").style.display = "none";
+			}
+			
+			function easyMode() {
+				mode="easy";
+				countTime = time = 240;
+				var num = Math.floor(Math.random()*5)+1;
+				finalLoad(num);
+			}
+			
+			function mediumMode() {
+				mode="medium";
+				countTime = time = 360;
+				var num = Math.floor(Math.random()*5)+6;
+				finalLoad(num);
+			}
+			
+			function hardMode() {
+				mode="hard";
+				countTime = time = 600;
+				var num = Math.floor(Math.random()*5)+11;
+				finalLoad(num);
+			}
+			
+			function finalLoad(num) {
+				menu = false;
+				document.getElementById("options").innerHTML = "";
+				document.getElementById("game").innerHTML = "";
+				document.getElementById("bar").style.display = "block";
+				document.getElementById("fineTuning").style.display = "block";
+				document.getElementById("progressBar").style.display = "block";
+				document.getElementById("progressBar").setAttribute("style", "width:20vw;");
+
+				counter = setInterval(timer, 10);
+				pointLockerManager();
+				var fileNum = "";
+				if (num < 10)
+					fileNum = "object0" + num;
+				else
+					fileNum = "object" + num;
+				loadShapes(fileNum);
+			}
+			
+			function paused() {
+				menu = true;
+				document.exitPointerLock();
+				
+				document.getElementById("bar").style.display = "none";
+				document.getElementById("progressBar").style.display = "none";
+				document.getElementById("fineTuning").style.display = "none";
+				
+				clearInterval(counter);
+				document.getElementById("game").innerHTML = "LightShift";
+				document.getElementById("options").innerHTML = "" +
+				"<p onClick='resume()'>Resume</p>";
+			}
+			
+			function resume() {
+				menu = false;
+
+				document.getElementById("bar").style.display = "block";
+				document.getElementById("progressBar").style.display = "block";
+				document.getElementById("fineTuning").style.display = "block";
+				document.getElementById("options").innerHTML = "";
+				document.getElementById("game").innerHTML = "";
+				
+				counter = setInterval(timer, 10);
+				pointLockerManager();
+			}
+			
+			function finalMenu() {
+				menu = true;
+				conEnable = false;
+				document.exitPointerLock();
+				
+				document.getElementById("options").style.display = "none";
+				document.getElementById("bar").style.display = "none";
+				document.getElementById("progressBar").style.display = "none";
+				document.getElementById("fineTuning").style.display = "none";
+				
+				clearInterval(counter);
+				document.getElementById("game").innerHTML = "LightShift";
+				document.getElementById("menu").style.top = '30%';
+				
+				calculateDistances();
+				var points = ((blocks.children.length * 20) - distSum)*10 + ((blocks.children.length * Math.sqrt(2)) - volSum)*10;
+				
+				var scores = document.cookie;
+				var bestScore = 0;
+				if (scores) {
+					scores = scores.split(" ");
+					for (var i = 0; i < scores.length; i++) {
+						var has = scores[i].indexOf(mode);
+						if (has != -1) {
+							bestScore = scores[i].split("=")[1].replace(";", "");
+							break;
+						}
+					}
+				}
+				
+				points = 2*Math.floor(points - initPoints);
+				var styleText0 = "", styleText1 = "";
+				var scoreTextLeft = "Best Score: ", scoreTextRight = bestScore;
+				
+				console.log(Math.floor(points+countTime));
+				console.log(bestScore);
+				
+				if (Math.floor(points+countTime) > bestScore) {
+					document.cookie = mode + "_points=" + Math.floor(points+countTime);
+					scoreTextLeft = "You set a new best score!";
+					scoreTextRight = "&nbsp";
+					styleText0 = "position:fixed;top:180%;width:26vw;text-align:center;";
+					styleText1 = "font-size:2vw;";
+				}
+				
+				
+				document.getElementById("endGame").innerHTML = "" +
+				"<p><div id='leftEnd'>Precision:<br>Time:</div>" + 
+				"<div id='rightEnd'>" + points + "<br>" + Math.floor(countTime) +"</div></p>" + 
+				"<p>" + "<div id='rightEnd' style='top:180%;'><b>" + Math.floor(points+countTime) + "</b><br>" + scoreTextRight + "</div>" +
+				"<div id='leftEnd' style='top:180%;'><b>Total:</b><br>" +
+				"<center><span style='white-space: nowrap;" + styleText1 + "'>" + scoreTextLeft + "</span></center></div></p>" +
+				"<p><div id='leftEnd' onClick='reloader()' style='top:260%; width:26vw;	height: 3vw;text-align: center;	cursor:pointer;	font-size: 2.5vw;'>Main Menu</div></p>";
+			}
+			
+			function reloader() {
+				location.reload()
+			}
+			
+			mainMenu();
+		</script>
+	</body>
+</html>
